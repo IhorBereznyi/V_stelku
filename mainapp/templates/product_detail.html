@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+    <nav aria-label="breadcrumb" class="mt-5">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'base' %}">Головна</a></li>
+        <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+      </ol>
+    </nav>
+<div class="row">
+    <div class="col-md-3">
+        <img src="{{ product.image.url }}" class="img-fluid1">
+        <p class="thumb">
+        {% for i in product.images.all %}
+              <img src="{{ i.image.url }}" >
+        {% endfor %}
+            <a  href="{% url 'add_to_cart' slug=product.slug %}"><button class="btn btn-success">В корзину<i class="fas fa-cart-arrow-down"></i></button></a>
+
+             </p>
+    </div>
+
+
+    <div class="prev" >
+        <h3> {{ product.title }} </h3>
+        <hr>
+        <p>Ціна: {{ product.get_sale }} <i class="fas fa-hryvnia"></i></p>
+        <hr>
+        <p>Опис: {{ product.description }}</p>
+        <hr>
+         <p>Розмір: {{ product.size }}</p>
+        <hr>
+         <p>Матеріл: {{ product.material }}</p>
+        <hr>
+         <p>Колір: {{ product.color }}</p>
+        <hr>
+         <p>Підошва: {{ product.sole }}</p>
+        <hr>
+    </div>
+{#    <p class="mt-4">Характеристики:</p>#}
+{#    <table class="table">#}
+{#      <tbody>#}
+{#      {% for f_name, f_value in product.get_features.items %}#}
+{#        <tr>#}
+{#          <th scope="row">{{ f_name }}</th>#}
+{#          <td>{{ f_value }}</td>#}
+{#        </tr>#}
+{#      {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+</div>
+
+{% endblock content %}

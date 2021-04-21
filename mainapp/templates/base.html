@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+
+</html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="Ihor Bereznyi">
+
+  <title>Shop Homepage - V__stelku</title>
+
+  <!-- Bootstrap core CSS -->
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'mainapp/css/main.css' %}">
+   	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, maximum-scale=1">
+
+
+
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,800italic,700italic,600italic,400italic,300italic,800,700,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand"  href="{% url 'base' %}">V__stelku</a>
+      <a href="{% url 'base' %}"><img class="small-logo" src="{% static 'mainapp/img/favourite.png' %}" alt=""></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav">
+            {% if not request.user.is_authenticated %}
+          <li>
+            <a class="text-maru" href="{% url 'login' %}">Авторизація</a>
+          </li>
+            <li>
+            <a class="text-maru" href="{% url 'registration' %}">Реєстрація</a>
+          </li>
+          {% else %}
+              <li class="nav-item">
+                  <span class="text-maru">Раді Вас вітати, {% if request.user.is_authenticated %}<span class="badge badge-danger">
+                    <a href="{% url 'profile' %}" style="text-decoration: none; font-size: 14px;">{{ request.user.username }}</a>
+                  </span>{% else %} Гіcть!{% endif %}<a href="{% url 'logout' %}">|Вихід<i class="fas fa-arrow-alt-circle-right"></i></a></span>
+              </li>
+          {% endif %}
+          </ul>
+          <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'cart' %}"><i class="fas fa-cart-arrow-down"></i>Корзина <span class="badge badge-pill badge-danger">{{ cart.products.count }}</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+
+
+  {% block content %}
+      <div class="title">
+ <h1>V__stelku<br/>Ми Вас взуємо</h1>
+
+</div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 mt-5">
+        <div class="list-group">
+          {% for category in categories %}
+          <a href="{{ category.get_absolute_url }}" class="list-group-item"> <i class="fas fa-shoe-prints"></i>{{ category.name }}  ({{ category.product_set.count }})</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+      <!-- /.col-lg-3 -->
+
+          <span class="new_products">Фільтр:</span>
+      <br>
+      <span class="price_sort" >Ціна:
+          <a href="{% url 'base_price_low' %}"><button  class="btn-confirm"><i class="fas fa-search-dollar"></i><i class="fas fa-sort-numeric-down"></i></button></a>
+          <a href="{% url 'base_price_h' %}"><button class="btn-confirm"><i class="fas fa-search-dollar"></i><i class="fas fa-sort-numeric-up"></i></button></a>
+      </span>
+
+        <span class="price_sort" >Дата:
+          <a href="{% url 'base_data_new' %}"><button  class="btn-confirm"><i class="fas fa-search-dollar"></i><i class="fas fa-sort-numeric-down"></i></button></a>
+          <a href="{% url 'base_data_old' %}"><button class="btn-confirm"><i class="fas fa-search-dollar"></i><i class="fas fa-sort-numeric-up"></i></button></a>
+      </span>
+
+      <span class="price_sort" >Вигідні пропозиції:
+           <a href="{% url 'base_sale' %}"><button class="btn-confirm"><i class="fas fa-gift"></i><i class="fas fa-percent"></i><i class="fas fa-user-tag"></i></button></a>
+      </span>
+
+      <div class="col-lg-9" >
+
+        {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row mt-5">
+          {% for product in products %}
+          <div class="col-lg-3   col-md-3 mb-3">
+            <div class="card h-100">
+              <a href="{{ reversed.product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+              <div class="card-body">
+                <h4 class="card-title">
+                  <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                </h4>
+                <span class="text-decoration">{{ product.price }} <i class="fas fa-hryvnia"></i> </span>
+                  <br>
+                  <span class="new_price">{{ product.get_sale }} <i class="fas fa-hryvnia"></i></span> <span class="sale">-{{ product.sale }}<i class="fas fa-percentage"></i></span>
+                <a href="{% url 'add_to_cart' slug=product.slug %}">
+                  <button class="btn btn-danger">В корзину <i class="fas fa-cart-arrow-down"></i></button>
+                </a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <!-- /.row -->
+      {% endblock content %}
+      </div>
+      <!-- /.col-lg-9 -->
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-logo"><a></a></div>
+            <ul class="social-link">
+						<li class="email"><a href="mailto:bodnarchuchkam@gmail.com"><i class="fas fa-at"></i></a></li>
+						<li class="telegram"><a href="https://t.me/vstelku"><i class="fab fa-telegram-plane"></i></a></li>
+						<li class="phone"><a href="tel:+380989563397"><i class="fas fa-phone"></i></a></li>
+						<li class="facebook"><a href="https://www.facebook.com/maria.bodnarchuk.980"><i class="fab fa-facebook-f"></i></a></li>
+        				<li class="instagram"><a href="https://instagram.com/v__stelku?igshid=gx24zjif0m0q"><i class="fab fa-instagram"></i></a></li>
+
+            </ul>
+            <span class="copyright"><a href="{% url 'base' %}">V__stelku </a>&copy; <a1>Always better</a1></span>
+
+  <!-- Bootstrap core JavaScript -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

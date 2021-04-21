@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load search_filter %}
+{% load static %}
+
+{#    <form action="{% url 'category_detail' slug=category.slug %}" method="GET">#}
+{#        {{ category|product_spec }}#}
+{#    <p class="text-center">#}
+{#        <button class="btn btn-outline-success" type="submit">Пошук</button>#}
+{#        <button class="btn btn-outline-info" type="submit">Очистити</button>#}
+{#    </p>#}
+{#    </form>#}
+
+{% block content %}
+
+{% block productfilter %}
+      <form class="d-flex mt-3" action="{% url 'category_detail' slug=category.slug %}" method="GET">
+        <input class="form-row" name="search" type="search" placeholder="Пошук товара" aria-label="Search">
+        <button class="btn btn-confirm" type="submit">Пошук</button>
+      </form>
+        <hr>
+{% endblock productfilter %}
+
+    <nav aria-label="breadcrumb" class="mt-5">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'base' %}">Головна</a></li>
+        <li class="breadcrumb-item active">{{ category.name }}</li>
+      </ol>
+    </nav>
+<div class="row">
+
+  {% for product in category_products %}
+  <div class="col-lg-3   col-md-3 mb-3">
+            <div class="card h-100">
+              <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+              <div class="card-body">
+                <h4 class="card-title">
+                  <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                </h4>
+                <span class="text-decoration">{{ product.price }} <i class="fas fa-hryvnia"></i> </span>
+                  <br>
+                  <span class="new_price">{{ product.get_sale }} <i class="fas fa-hryvnia"></i></span> <span class="sale">-{{ product.sale }}<i class="fas fa-percentage"></i></span>
+                <a href="{% url 'add_to_cart' slug=product.slug %}">
+                  <button class="btn btn-danger">В корзину <i class="fas fa-cart-arrow-down"></i></button>
+                </a>
+              </div>
+            </div>
+          </div>
+  {% endfor %}
+</div>
+
+{% endblock content %}
